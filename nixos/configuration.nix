@@ -50,17 +50,17 @@
         efiSupport = true;
         useOSProber = true;
       };
-      
+
       systemd-boot.enable = false;
     };
-    
+
     loader.grub2-theme = {
       enable = true;
       theme = "whitesur";
       footer = true;
       screen = "ultrawide2k";
     };
-    
+
     kernelParams = [ "quiet" "splash" "nvidia_drm.modeset=1" ];
     kernelPackages = pkgs.linuxPackages_latest;
     # wifi module
@@ -78,7 +78,7 @@
       # Enable 32-bit support for Steam, Wine, etc.
       enable32Bit = true;
     };
-    
+
     nvidia = {
       # Modesetting is required for Wayland compositors (GNOME)
       modesetting.enable = true;
@@ -98,7 +98,7 @@
       package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
   };
-  
+
   # Load NVIDIA driver for Xorg and Wayland
   services.xserver.videoDrivers = [ "nvidia" ];
 
@@ -118,7 +118,7 @@
   services.desktopManager.gnome.enable = true;
   programs.xwayland.enable = true;
   programs.dconf.enable = true;
-  
+
   # Portal services for Wayland (screen sharing, file dialogs, etc.)
   xdg.portal = {
   enable = true;
@@ -131,7 +131,7 @@
     niri.default = ["gnome" "gtk"];
   };
 };
-  
+
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -140,7 +140,7 @@
     pulse.enable = true;
     jack.enable = true;
   };
-  
+
   virtualisation = {
     docker = {
       enable = true;
@@ -158,16 +158,16 @@
       dockerCompat = false;
     };
   };
-  
+
   # Enable NVIDIA container toolkit
   hardware.nvidia-container-toolkit.enable = true;
 
   # ==========================================================================
   # DEVELOPMENT TOOLS & LANGUAGES
   # ==========================================================================
-  
+
   programs.git.enable = true;
-  
+
   # Java/Kotlin development
   programs.java = {
     enable = true;
@@ -177,10 +177,10 @@
   # ==========================================================================
   # NETWORKING & VPN
   # ==========================================================================
-  
+
   # ProtonVPN
   services.resolved.enable = true;
-  
+
   # Firewall
   networking.firewall = {
     checkReversePath = false; # for vpn
@@ -197,7 +197,7 @@
   # ==========================================================================
   # FONTS
   # ==========================================================================
-  
+
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
@@ -213,17 +213,17 @@
       ubuntu-classic
       source-han-sans
       source-han-serif
-      
+
       # Additional programming fonts
       jetbrains-mono
       fira-code
       cascadia-code
-      
+
       # Microsoft fonts (for compatibility)
       corefonts
       vista-fonts
     ];
-    
+
     fontconfig = {
       enable = true;
       defaultFonts = {
@@ -238,8 +238,11 @@
   # ==========================================================================
   # SYSTEM PACKAGES
   # ==========================================================================
-  
+
   environment.systemPackages = with pkgs; [
+    # --- Terminal Emulator ---
+    gnome-console  # Modern GNOME terminal (replaces gnome-terminal)
+
     # --- Core CLI Tools ---
     coreutils
     gnumake
@@ -264,7 +267,7 @@
     yq
     tldr
     ntfs3g
-    
+
     # --- Development Languages ---
     # Python
     python312
@@ -274,7 +277,7 @@
     python312Packages.pytest
     python312Packages.ipython
     poetry
-    
+
     # TypeScript/Node.js
     nodejs_22
     nodePackages.npm
@@ -286,7 +289,7 @@
     nodePackages.prettier
     deno
     bun
-    
+
     # Rust
     rustup
     cargo-watch
@@ -298,7 +301,7 @@
     beamMinimal28Packages.elixir
     # Go
     go
-    
+
     # Kotlin
     kotlin
     gradle
@@ -306,25 +309,25 @@
 
     # databases
     postgresql_16
-    
+
     # --- Editors & IDEs ---
     neovim
     # Zed editor (FOSS, Rust-based, fast)
     zed-editor
-    
+
     # --- JetBrains IDEs ---
     jetbrains.idea-ultimate      # IntelliJ IDEA
     jetbrains.pycharm-professional  # PyCharm
     jetbrains.webstorm           # WebStorm for TS
     jetbrains.rust-rover         # Rust IDE
-    # jetbrains.rider            
-    
+    # jetbrains.rider
+
     # --- Version Control ---
     git
     git-lfs
     lazygit
     gh  # GitHub CLI
-    
+
     # --- Containers & Cloud ---
     docker-compose
     lazydocker
@@ -332,65 +335,65 @@
     k9s
     helm
     terraform
-    
+
     # --- API Development ---
     bruno  # FOSS API client
-    
+
     # --- Browsers ---
     brave
     firefox
-    
+
     # --- Communication ---
     equibop  # Enhanced Discord client
-    
+
     # --- Media ---
     vlc
     mpv
     ffmpeg
-    
+
     # --- VPN ---
     wireguard-tools
     protonvpn-gui
     qbittorrent
-    
+
     # --- System Monitoring ---
     fastfetch
     neofetch
     duf  # Disk usage
     ncdu # NCurses disk usage
     nvtopPackages.nvidia  # NVIDIA GPU monitoring (like htop for GPU)
-    
+
     # --- NVIDIA Tools ---
     mesa-demos  # Check OpenGL info
     vulkan-tools  # Check Vulkan info
     libva-utils  # Check VA-API (video acceleration)
-    
+
     # --- GNOME Utilities ---
     wl-clipboard
     gnome-tweaks
     gnome-extension-manager
     dconf-editor
-    
+
     # --- File Management ---
     nautilus
     yazi  # TUI file manager
-    
+
     # --- Database Tools ---
     dbeaver-bin
-    
+
     # --- Networking ---
     networkmanagerapplet
     nmap
     wireshark
-    
+
     # --- Productivity ---
     # obsidian  # Note-taking
-    
+
     # --- Misc Development ---
     direnv  # Per-directory environments
-    starship 
-    zellij 
-    
+    starship
+    zellij
+
     # --- Security ---
     gnupg
     pinentry-gnome3
@@ -400,7 +403,7 @@
   # ==========================================================================
   # PROGRAMS CONFIGURATION
   # ==========================================================================
-  
+
   programs = {
     # Neovim system-wide
     neovim = {
@@ -409,7 +412,7 @@
       viAlias = true;
       vimAlias = true;
     };
-    
+
     zsh.enable = true;
     fish.enable = true;
     starship.enable = true;
@@ -417,14 +420,14 @@
       enable = true;
       nix-direnv.enable = true;
     };
-    
+
     seahorse.enable = true;
   };
 
   # ==========================================================================
   # SERVICES
   # ==========================================================================
-  
+
   services = {
     # SSH
     openssh = {
@@ -434,22 +437,22 @@
         PermitRootLogin = "no";
       };
     };
-    
+
     # Printing
     printing.enable = true;
-    
+
     # Bluetooth
     blueman.enable = true;
-    
+
     # Flatpak
     flatpak.enable = true;
-    
+
     # GNOME services
     gnome = {
       gnome-keyring.enable = true;
       sushi.enable = true;  # File previewer
     };
-    
+
     # DBus for Nautilus in Niri
     dbus.packages = [ pkgs.nautilus ];
 
@@ -458,16 +461,16 @@
   # ==========================================================================
   # USER CONFIGURATION
   # ==========================================================================
-  
+
   users.users.${username} = {
     isNormalUser = true;
     description = username;
-    extraGroups = [ 
-      "networkmanager" 
-      "wheel" 
-      "docker" 
-      "audio" 
-      "video" 
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+      "audio"
+      "video"
       "input"
       "dialout"
     ];
@@ -489,33 +492,32 @@ systemd.user.services.protonvpn-autoconnect = {
   # ==========================================================================
   # ENVIRONMENT VARIABLES
   # ==========================================================================
-  
+
   environment.sessionVariables = {
     # Wayland
     NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "1";
-    
+
     # NVIDIA Wayland compatibility
     # These help Electron apps and other software work properly with NVIDIA on Wayland
     GBM_BACKEND = "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     LIBVA_DRIVER_NAME = "nvidia";
-    
+
     # Editor
     EDITOR = "nvim";
     VISUAL = "nvim";
-    
+
     # Rust
     RUSTUP_HOME = "$HOME/.rustup";
     CARGO_HOME = "$HOME/.cargo";
-    
+
     # Go
     GOPATH = "$HOME/go";
-    
+
     # XDG
     XDG_CURRENT_DESKTOP = "gnome";
   };
-  
+
   environment.pathsToLink = [ "/share/zsh" ];
 }
-

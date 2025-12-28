@@ -9,31 +9,31 @@
     username = username;
     homeDirectory = "/home/${username}";
     stateVersion = "24.11";
-    
+
     # User-specific packages
     packages = with pkgs; [
       # Catppuccin themes
       catppuccin-gtk
       catppuccin-kvantum
       catppuccin-cursors
-      
+
       # Fonts (user level)
       inter
-      
+
       # Python LSP
       python312Packages.python-lsp-server
       python312Packages.pylsp-mypy
-      
+
       # Rust tools
       rust-analyzer
-      
+
       # Terminal enhancements
       zsh-autosuggestions
       zsh-syntax-highlighting
       zsh-completions
       nix-zsh-completions
     ];
-    
+
     # Dotfiles and config files
     file = {
       # YAGS (Yet Another Generic Startpage) configuration
@@ -78,13 +78,13 @@
           }
         ];
       };
-      
+
       # Wallpapers directory
       "Pictures/Wallpapers/.keep".text = "";
     };
-    
+
     sessionVariables = {
-      TERMINAL = "gnome-terminal";
+      TERMINAL = "kgx";
       BROWSER = "firefox";
     };
   };
@@ -92,7 +92,7 @@
   # ==========================================================================
   # CATPPUCCIN THEMING
   # ==========================================================================
-  
+
   catppuccin = {
     enable = true;
     flavor = "mocha";  # mocha, macchiato, frappe, or latte
@@ -130,7 +130,7 @@
   # ==========================================================================
   # GNOME CONFIGURATION & KEYBINDINGS
   # ==========================================================================
-  
+
   dconf.settings = {
     # Custom keybindings
     "org/gnome/settings-daemon/plugins/media-keys" = {
@@ -142,60 +142,60 @@
       ];
       area-screenshot = [ "<Super><Shift>s" ];
     };
-    
+
     # Super+Return = Terminal
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
       name = "Terminal";
-      command = "gnome-terminal";
+      command = "kgx";
       binding = "<Super>Return";
     };
-    
+
     # Super+E = File Manager
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
       name = "File Manager";
       command = "nautilus";
       binding = "<Super>e";
     };
-    
+
     # Super+B = Browser
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
       name = "Browser";
       command = "firefox";
       binding = "<Super>b";
     };
-    
+
     # Super+D = Discord (Equibop)
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3" = {
       name = "Discord";
       command = "equibop";
       binding = "<Super>d";
     };
-    
+
     # Window management keybindings
     "org/gnome/desktop/wm/keybindings" = {
       close = [ "<Super>q" ];
       toggle-maximized = [ "<Super>f" ];
       toggle-fullscreen = [ "<Super><Shift>f" ];
-      
+
       # Workspace switching
       switch-to-workspace-1 = [ "<Super>1" ];
       switch-to-workspace-2 = [ "<Super>2" ];
       switch-to-workspace-3 = [ "<Super>3" ];
       switch-to-workspace-4 = [ "<Super>4" ];
-      
+
       # Move window to workspace
       move-to-workspace-1 = [ "<Super><Shift>1" ];
       move-to-workspace-2 = [ "<Super><Shift>2" ];
       move-to-workspace-3 = [ "<Super><Shift>3" ];
       move-to-workspace-4 = [ "<Super><Shift>4" ];
     };
-    
+
     # Shell keybindings - Super+Space for app search (like Spotlight)
     "org/gnome/shell/keybindings" = {
       toggle-application-view = [ "<Super>a" ];
       toggle-overview = [ "<Super>space" ];  # Spotlight-like search
     };
-    
+
     # GNOME Shell settings
     "org/gnome/shell" = {
       favorite-apps = [
@@ -206,7 +206,7 @@
       ];
       disable-user-extensions = false;
     };
-    
+
     # Desktop settings
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
@@ -214,18 +214,18 @@
       font-antialiasing = "rgba";
       font-hinting = "slight";
     };
-    
+
     # Workspaces
     "org/gnome/mutter" = {
       dynamic-workspaces = false;
       workspaces-only-on-primary = true;
     };
-    
+
     "org/gnome/desktop/wm/preferences" = {
       num-workspaces = 4;
       workspace-names = [ "Code" "Web" "Chat" "Media" ];
     };
-    
+
     # Touchpad settings (if on laptop)
     "org/gnome/desktop/peripherals/touchpad" = {
       tap-to-click = true;
@@ -237,44 +237,44 @@
   # ==========================================================================
   # ZSH CONFIGURATION WITH COMPLETIONS
   # ==========================================================================
-  
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    
+
     # Completions
     completionInit = ''
       # Initialize completion system
       autoload -Uz compinit
       compinit
-      
+
       # Case-insensitive completion
       zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-      
+
       # Menu selection
       zstyle ':completion:*' menu select
-      
+
       # Colors in completion
       zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
-      
+
       # Group completions
       zstyle ':completion:*' group-name '''
       zstyle ':completion:*:descriptions' format '%F{magenta}-- %d --%f'
-      
+
       # Cache completions
       zstyle ':completion:*' use-cache on
       zstyle ':completion:*' cache-path "$HOME/.zsh/cache"
-      
+
       # Complete . and .. special directories
       zstyle ':completion:*' special-dirs true
-      
+
       # Kill command completion
       zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
       zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
     '';
-    
+
     shellAliases = {
       # Navigation
       ll = "eza -la --icons --git";
@@ -283,7 +283,7 @@
       lt = "eza --tree --icons --level=2";
       cat = "bat";
       cd = "z";  # Use zoxide
-      
+
       # Git
       g = "git";
       gs = "git status";
@@ -298,7 +298,7 @@
       gb = "git branch";
       glog = "git log --oneline --graph --decorate -10";
       lg = "lazygit";
-      
+
       # Docker
       d = "docker";
       dc = "docker compose";
@@ -306,7 +306,7 @@
       dpa = "docker ps -a";
       di = "docker images";
       ld = "lazydocker";
-      
+
       # NixOS
       nrs = "sudo nixos-rebuild switch --flake .#nixos";
       nrb = "sudo nixos-rebuild boot --flake .#nixos";
@@ -315,54 +315,54 @@
       ns = "nix search nixpkgs";
       nsh = "nix-shell";
       ncg = "sudo nix-collect-garbage -d";
-      
+
       # System
       ff = "fastfetch";
       c = "clear";
       e = "exit";
-      
+
       # Quick edit
       zshrc = "nvim ~/.zshrc";
       nixconf = "cd /etc/nixos && nvim .";
     };
-    
+
     initContent = ''
       # Initialize zoxide (better cd)
       eval "$(zoxide init zsh)"
-      
+
       # Initialize starship prompt
       eval "$(starship init zsh)"
-      
+
       # Initialize direnv
       eval "$(direnv hook zsh)"
-      
+
       # Rust
       export PATH="$HOME/.cargo/bin:$PATH"
-      
+
       # Go
       export PATH="$HOME/go/bin:$PATH"
-      
+
       # Local binaries
       export PATH="$HOME/.local/bin:$PATH"
-      
+
       # FZF settings with catppuccin colors
       export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
       export FZF_DEFAULT_OPTS='
-        --height 40% 
-        --layout=reverse 
+        --height 40%
+        --layout=reverse
         --border rounded
         --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8
         --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc
         --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8
       '
-      
+
       # Better history
       setopt HIST_IGNORE_ALL_DUPS
       setopt HIST_SAVE_NO_DUPS
       setopt HIST_REDUCE_BLANKS
       setopt INC_APPEND_HISTORY
       setopt SHARE_HISTORY
-      
+
       # Key bindings
       bindkey -e  # Emacs keybindings
       bindkey '^[[A' history-search-backward
@@ -370,17 +370,17 @@
       bindkey '^[[H' beginning-of-line
       bindkey '^[[F' end-of-line
       bindkey '^[[3~' delete-char
-      
+
       # Word navigation
       bindkey '^[[1;5C' forward-word   # Ctrl+Right
       bindkey '^[[1;5D' backward-word  # Ctrl+Left
-      
+
       # Welcome message
       if command -v fastfetch > /dev/null 2>&1; then
         fastfetch --logo small
       fi
     '';
-    
+
     history = {
       size = 50000;
       save = 50000;
@@ -395,7 +395,7 @@
   # ==========================================================================
   # STARSHIP PROMPT - ROUNDY STYLE WITH FULL PATH
   # ==========================================================================
-  
+
   programs.starship = {
     enable = true;
     settings = {
@@ -421,10 +421,10 @@
         "[](fg:blue)"
         "\n$character"
       ];
-      
+
       # Disable default newline
       add_newline = true;
-      
+
       # OS icon
       os = {
         disabled = false;
@@ -436,7 +436,7 @@
           Macos = " ";
         };
       };
-      
+
       # Username
       username = {
         show_always = true;
@@ -444,7 +444,7 @@
         style_root = "bg:mauve fg:red";
         format = "[ $user ]($style)";
       };
-      
+
       # Directory - FULL PATH
       directory = {
         style = "bg:peach fg:base";
@@ -456,14 +456,14 @@
         read_only = " 󰌾";
         read_only_style = "bg:peach fg:red";
       };
-      
+
       # Git branch
       git_branch = {
         symbol = " ";
         style = "bg:yellow fg:base";
         format = "[ $symbol$branch ]($style)";
       };
-      
+
       # Git status
       git_status = {
         style = "bg:yellow fg:base";
@@ -480,42 +480,42 @@
         renamed = "»\${count} ";
         deleted = "✘\${count} ";
       };
-      
+
       # Python
       python = {
         symbol = " ";
         style = "bg:teal fg:base";
         format = "[ $symbol$version ]($style)";
       };
-      
+
       # Rust
       rust = {
         symbol = " ";
         style = "bg:teal fg:base";
         format = "[ $symbol$version ]($style)";
       };
-      
+
       # Node.js
       nodejs = {
         symbol = " ";
         style = "bg:teal fg:base";
         format = "[ $symbol$version ]($style)";
       };
-      
+
       # Java
       java = {
         symbol = " ";
         style = "bg:teal fg:base";
         format = "[ $symbol$version ]($style)";
       };
-      
+
       # Go
       golang = {
         symbol = " ";
         style = "bg:teal fg:base";
         format = "[ $symbol$version ]($style)";
       };
-      
+
       # Docker
       docker_context = {
         symbol = " ";
@@ -523,7 +523,7 @@
         format = "[ $symbol$context ]($style)";
         only_with_files = true;
       };
-      
+
       # Nix shell
       nix_shell = {
         symbol = " ";
@@ -532,14 +532,14 @@
         impure_msg = "impure";
         pure_msg = "pure";
       };
-      
+
       # Prompt character
       character = {
         success_symbol = "[❯](bold green)";
         error_symbol = "[❯](bold red)";
         vimcmd_symbol = "[❮](bold green)";
       };
-      
+
       # Colors (Catppuccin Mocha)
       palette = "catppuccin_mocha";
       palettes.catppuccin_mocha = {
@@ -576,13 +576,13 @@
   # ==========================================================================
   # GIT CONFIGURATION
   # ==========================================================================
-  
+
   programs.git = {
     enable = true;
     settings = {
       user = {
-        userName = "wanony";
-        userEmail = "whereweat2018@gmail.com";
+        name = "wanony";
+        email = "whereweat2018@gmail.com";
       };
       alias = {
         st = "status";
@@ -601,7 +601,7 @@
       diff.colorMoved = "default";
       merge.conflictstyle = "diff3";
     };
-    
+
   };
 
   programs.gh = {
@@ -644,7 +644,7 @@
   # ==========================================================================
   # DEVELOPMENT TOOLS
   # ==========================================================================
-  
+
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
@@ -654,7 +654,7 @@
   # ==========================================================================
   # FILE MANAGER - YAZI
   # ==========================================================================
-  
+
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;
@@ -670,7 +670,7 @@
   # ==========================================================================
   # FZF
   # ==========================================================================
-  
+
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
@@ -685,7 +685,7 @@
   # ==========================================================================
   # BAT (Better cat)
   # ==========================================================================
-  
+
   programs.bat = {
     enable = true;
     config = {
@@ -697,23 +697,23 @@
   # ==========================================================================
   # NIRI CONFIGURATION
   # ==========================================================================
-  
+
   xdg.configFile."niri/config.kdl".source = ./niri-config.kdl;
-  
+
   # ==========================================================================
   # EWW STATUS BAR
   # ==========================================================================
-  
+
   programs.eww = {
     enable = true;
     package = pkgs.eww;
     configDir = ./eww;
   };
-  
+
   # ==========================================================================
   # ANYRUN APP LAUNCHER
   # ==========================================================================
-  
+
   xdg.configFile."anyrun/config.ron".text = ''
     Config(
       x: Fraction(0.5),
@@ -731,16 +731,16 @@
       ],
     )
   '';
-  
+
   xdg.configFile."anyrun/style.css".source = ./anyrun-style.css;
-  
+
   # ==========================================================================
   # SWAYNOTIFICATIONCENTER
   # ==========================================================================
-  
+
   services.swaync.enable = true;
   catppuccin.swaync.enable = true;
-  
+
   # ==========================================================================
   # SWAYLOCK-EFFECTS
   # ==========================================================================
@@ -754,11 +754,11 @@
     effect-blur = "7x5";
     effect-vignette = "0.5:0.5";
     fade-in = "0.2";
-    
+
     timestr = "%H:%M";
     datestr = "%A, %d %B";
     font = "JetBrainsMono Nerd Font";
-    
+
     indicator = true;
     indicator-radius = 100;
     indicator-thickness = 10;
@@ -766,12 +766,12 @@
 };
 
 catppuccin.swaylock.enable = true;
-  
-  
+
+
   # ==========================================================================
   # SWAYIDLE
   # ==========================================================================
-  
+
   services.swayidle = {
     enable = true;
     events = [
@@ -779,8 +779,8 @@ catppuccin.swaylock.enable = true;
     ];
     timeouts = [
       { timeout = 300; command = "${pkgs.swaylock-effects}/bin/swaylock -f"; }
-      { 
-        timeout = 600; 
+      {
+        timeout = 600;
         command = "${pkgs.niri}/bin/niri msg action power-off-monitors";
         resumeCommand = "${pkgs.niri}/bin/niri msg action power-on-monitors";
       }
