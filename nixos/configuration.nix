@@ -1,6 +1,7 @@
 { config, pkgs, inputs, lib, username, hostname, ... }:
 
 {
+  imports = [./niri.nix];
   system.stateVersion = "25.11";
   nix = {
     settings = {
@@ -21,6 +22,7 @@
   };
   networking.hostName = hostname;
   networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.powersave = false;
   time.timeZone = "Europe/London";
   i18n = {
     defaultLocale = "en_GB.UTF-8";
@@ -56,7 +58,7 @@
       enable = true;
       theme = "whitesur";
       footer = true;
-      screen = "ultrawide2k"
+      screen = "ultrawide2k";
     };
     
     kernelParams = [ "quiet" "splash" "nvidia_drm.modeset=1" ];
@@ -119,13 +121,16 @@
   
   # Portal services for Wayland (screen sharing, file dialogs, etc.)
   xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gnome
-      xdg-desktop-portal-gtk
-    ];
-    config.common.default = "gnome";
+  enable = true;
+  extraPortals = with pkgs; [
+    xdg-desktop-portal-gnome
+    xdg-desktop-portal-gtk
+  ];
+  config = {
+    common.default = "gnome";
+    niri.default = ["gnome" "gtk"];
   };
+};
   
   security.rtkit.enable = true;
   services.pipewire = {
@@ -258,6 +263,7 @@
     jq
     yq
     tldr
+    ntfs3g
     
     # --- Development Languages ---
     # Python
@@ -285,7 +291,11 @@
     rustup
     cargo-watch
     cargo-edit
-    
+
+    # Zig
+    zig
+    # Elixir
+    beamMinimal28Packages.elixir
     # Go
     go
     
@@ -293,6 +303,9 @@
     kotlin
     gradle
     maven
+
+    # databases
+    postgresql_16
     
     # --- Editors & IDEs ---
     neovim
@@ -338,6 +351,7 @@
     # --- VPN ---
     wireguard-tools
     protonvpn-gui
+    qbittorrent
     
     # --- System Monitoring ---
     fastfetch
@@ -438,6 +452,7 @@
     
     # DBus for Nautilus in Niri
     dbus.packages = [ pkgs.nautilus ];
+
   };
 
   # ==========================================================================
@@ -460,6 +475,16 @@
   };
 
   # security.sudo.wheelNeedsPassword = false;
+systemd.user.services.protonvpn-autoconnect = {
+  description = "Auto connect to VPN";
+  wantedBy = [ "graphical-session.target" ];
+  after = [ "graphical-session.target" ];
+  serviceConfig = {
+    Type = "oneshot";
+    ExecStart = "${pkgs.protonvpn-gui}/bin/protonvpn-cli connect --fastest";
+    RemainAfterExit = true;
+  };
+};
 
   # ==========================================================================
   # ENVIRONMENT VARIABLES
@@ -493,3 +518,4 @@
   
   environment.pathsToLink = [ "/share/zsh" ];
 }
+

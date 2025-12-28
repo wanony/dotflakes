@@ -1,0 +1,238 @@
+/* Eww Stylesheet - Catppuccin Mocha */
+
+/* Catppuccin Mocha Color Palette */
+* {
+  /* Base Colors */
+  --base: #1e1e2e;
+  --mantle: #181825;
+  --crust: #11111b;
+  
+  /* Surface Colors */
+  --surface0: #313244;
+  --surface1: #45475a;
+  --surface2: #585b70;
+  
+  /* Overlay Colors */
+  --overlay0: #6c7086;
+  --overlay1: #7f849c;
+  --overlay2: #9399b2;
+  
+  /* Text Colors */
+  --text: #cdd6f4;
+  --subtext0: #a6adc8;
+  --subtext1: #bac2de;
+  
+  /* Accent Colors */
+  --lavender: #b4befe;
+  --blue: #89b4fa;
+  --sapphire: #74c7ec;
+  --sky: #89dceb;
+  --teal: #94e2d5;
+  --green: #a6e3a1;
+  --yellow: #f9e2af;
+  --peach: #fab387;
+  --maroon: #eba0ac;
+  --red: #f38ba8;
+  --mauve: #cba6f7;
+  --pink: #f5c2e7;
+  --flamingo: #f2cdcd;
+  --rosewater: #f5e0dc;
+  
+  /* Fonts */
+  --font: "JetBrainsMono Nerd Font";
+}
+
+/* =============================================================================
+   MAIN BAR
+   ============================================================================= */
+
+.bar {
+  background-color: var(--base);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  padding: 0px 12px;
+}
+
+.left,
+.center,
+.right {
+  padding: 0px 8px;
+}
+
+/* =============================================================================
+   WORKSPACES
+   ============================================================================= */
+
+.workspaces {
+  padding: 0px;
+  margin: 0px;
+}
+
+.workspace {
+  background-color: var(--surface0);
+  color: var(--text);
+  padding: 4px 12px;
+  margin: 6px 4px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  min-width: 30px;
+}
+
+.workspace:hover {
+  background-color: var(--surface1);
+  border-color: var(--mauve);
+}
+
+.workspace.active {
+  background-color: var(--mauve);
+  color: var(--base);
+  border-color: var(--mauve);
+  font-weight: bold;
+}
+
+.workspace.urgent {
+  background-color: var(--red);
+  color: var(--base);
+  border-color: var(--red);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* =============================================================================
+   DATE & TIME
+   ============================================================================= */
+
+.datetime {
+  background-color: var(--surface0);
+  color: var(--text);
+  padding: 6px 16px;
+  margin: 6px 0px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* =============================================================================
+   NETWORK
+   ============================================================================= */
+
+.network {
+  background-color: var(--surface0);
+  color: var(--text);
+  padding: 6px 12px;
+  margin: 6px 4px;
+  border-radius: 8px;
+}
+
+.network-icon {
+  color: var(--blue);
+  font-size: 16px;
+  margin-right: 6px;
+}
+
+.network-text {
+  color: var(--text);
+}
+
+/* =============================================================================
+   VOLUME
+   ============================================================================= */
+
+.volume {
+  background-color: var(--surface0);
+  color: var(--text);
+  padding: 6px 12px;
+  margin: 6px 4px;
+  border-radius: 8px;
+}
+
+.volume button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.volume-icon {
+  color: var(--green);
+  font-size: 16px;
+  margin-right: 6px;
+}
+
+.volume-text {
+  color: var(--text);
+}
+
+/* =============================================================================
+   SYSTEM TRAY
+   ============================================================================= */
+
+.systray {
+  background-color: var(--surface0);
+  padding: 6px 12px;
+  margin: 6px 4px;
+  border-radius: 8px;
+}
+
+/* =============================================================================
+   POWER BUTTON
+   ============================================================================= */
+
+.power {
+  background-color: var(--surface0);
+  padding: 6px 12px;
+  margin: 6px 4px;
+  border-radius: 8px;
+}
+
+.power button {
+  background: transparent;
+  border: none;
+  color: var(--red);
+  font-size: 18px;
+  padding: 0;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+
+.power button:hover {
+  color: var(--maroon);
+}
+
+/* =============================================================================
+   POWER MENU
+   ============================================================================= */
+
+.power-menu {
+  background-color: var(--base);
+  border: 2px solid var(--surface1);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 8px;
+}
+
+.power-button {
+  background-color: var(--surface0);
+  color: var(--text);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 4px 0px;
+  font-family: var(--font);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.power-button:hover {
+  background-color: var(--surface1);
+  color: var(--mauve);
+}
+
+.power-button label {
+  color: inherit;
+}

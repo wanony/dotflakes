@@ -84,8 +84,8 @@
     };
     
     sessionVariables = {
-      TERMINAL = "kitty";
-      BROWSER = "floorp";
+      TERMINAL = "gnome-terminal";
+      BROWSER = "firefox";
     };
   };
 
@@ -140,12 +140,13 @@
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/"
       ];
+      area-screenshot = [ "<Super><Shift>s" ];
     };
     
     # Super+Return = Terminal
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
       name = "Terminal";
-      command = "kitty";
+      command = "gnome-terminal";
       binding = "<Super>Return";
     };
     
@@ -159,7 +160,7 @@
     # Super+B = Browser
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
       name = "Browser";
-      command = "floorp";
+      command = "firefox";
       binding = "<Super>b";
     };
     
@@ -198,11 +199,10 @@
     # GNOME Shell settings
     "org/gnome/shell" = {
       favorite-apps = [
-        "floorp.desktop"
-        "kitty.desktop"
+        "firefox.desktop"
+        "org.gnome.Terminal.desktop"
         "org.gnome.Nautilus.desktop"
         "equibop.desktop"
-        "code.desktop"
       ];
       disable-user-extensions = false;
     };
@@ -574,115 +574,25 @@
   };
 
   # ==========================================================================
-  # TERMINAL - KITTY (Primary)
-  # ==========================================================================
-
-  programs.kitty = {
-    enable = true;
-    font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 12;
-    };
-    settings = {
-      # Window
-      window_padding_width = 12;
-      background_opacity = "0.95";
-      confirm_os_window_close = 0;
-      hide_window_decorations = true;
-      
-      # Bell
-      enable_audio_bell = false;
-      visual_bell_duration = 0;
-      
-      # Scrollback
-      scrollback_lines = 10000;
-      
-      # URLs
-      url_style = "curly";
-      open_url_with = "floorp";
-      
-      # Cursor
-      cursor_shape = "beam";
-      cursor_blink_interval = "0.5";
-      
-      # Tab bar
-      tab_bar_edge = "top";
-      tab_bar_style = "powerline";
-      tab_powerline_style = "round";
-      
-      # Catppuccin Mocha colors (applied via catppuccin module too)
-      foreground = "#CDD6F4";
-      background = "#1E1E2E";
-      selection_foreground = "#1E1E2E";
-      selection_background = "#F5E0DC";
-      cursor = "#F5E0DC";
-      cursor_text_color = "#1E1E2E";
-      url_color = "#F5E0DC";
-      active_border_color = "#B4BEFE";
-      inactive_border_color = "#6C7086";
-      bell_border_color = "#F9E2AF";
-      active_tab_foreground = "#11111B";
-      active_tab_background = "#CBA6F7";
-      inactive_tab_foreground = "#CDD6F4";
-      inactive_tab_background = "#181825";
-      tab_bar_background = "#11111B";
-      mark1_foreground = "#1E1E2E";
-      mark1_background = "#B4BEFE";
-      mark2_foreground = "#1E1E2E";
-      mark2_background = "#CBA6F7";
-      mark3_foreground = "#1E1E2E";
-      mark3_background = "#74C7EC";
-      color0 = "#45475A";
-      color8 = "#585B70";
-      color1 = "#F38BA8";
-      color9 = "#F38BA8";
-      color2 = "#A6E3A1";
-      color10 = "#A6E3A1";
-      color3 = "#F9E2AF";
-      color11 = "#F9E2AF";
-      color4 = "#89B4FA";
-      color12 = "#89B4FA";
-      color5 = "#F5C2E7";
-      color13 = "#F5C2E7";
-      color6 = "#94E2D5";
-      color14 = "#94E2D5";
-      color7 = "#BAC2DE";
-      color15 = "#A6ADC8";
-    };
-    keybindings = {
-      "ctrl+shift+t" = "new_tab";
-      "ctrl+shift+w" = "close_tab";
-      "ctrl+shift+right" = "next_tab";
-      "ctrl+shift+left" = "previous_tab";
-      "ctrl+shift+c" = "copy_to_clipboard";
-      "ctrl+shift+v" = "paste_from_clipboard";
-      "ctrl+shift+plus" = "change_font_size all +2.0";
-      "ctrl+shift+minus" = "change_font_size all -2.0";
-      "ctrl+shift+backspace" = "change_font_size all 0";
-    };
-  };
-
-  # ==========================================================================
   # GIT CONFIGURATION
   # ==========================================================================
   
   programs.git = {
     enable = true;
     settings = {
-	    user = {
-		    userName = "wanony";
-		    userEmail = "whereweat2018@gmail.com";
-	    };
-
-	    alias = {
-	      st = "status";
-	      co = "checkout";
-	      br = "branch";
-	      ci = "commit";
-	      unstage = "reset HEAD --";
-	      last = "log -1 HEAD";
-	      lg = "log --oneline --graph --decorate";
-	    };
+      user = {
+        userName = "wanony";
+        userEmail = "whereweat2018@gmail.com";
+      };
+      alias = {
+        st = "status";
+        co = "checkout";
+        br = "branch";
+        ci = "commit";
+        unstage = "reset HEAD --";
+        last = "log -1 HEAD";
+        lg = "log --oneline --graph --decorate";
+      };
 
       init.defaultBranch = "main";
       pull.rebase = true;
@@ -692,6 +602,30 @@
       merge.conflictstyle = "diff3";
     };
     
+  };
+
+  programs.gh = {
+    enable = true;
+    gitCredentialHelper.enable = true;
+    settings = {
+      git_protocol = "https";
+      editor = "nvim";
+    };
+  };
+
+  programs.lazygit = {
+    enable = true;
+    settings = {
+      git = {
+        paging = {
+	  colorArg = "always";
+	  pager = "delta --dark --paging=never";
+        };
+      };
+      os = {
+        editPreset = "nvim";
+      };
+    };
   };
 
   programs.delta = {
@@ -760,6 +694,100 @@
     };
   };
 
+  # ==========================================================================
+  # NIRI CONFIGURATION
+  # ==========================================================================
+  
+  xdg.configFile."niri/config.kdl".source = ./niri-config.kdl;
+  
+  # ==========================================================================
+  # EWW STATUS BAR
+  # ==========================================================================
+  
+  programs.eww = {
+    enable = true;
+    package = pkgs.eww;
+    configDir = ./eww;
+  };
+  
+  # ==========================================================================
+  # ANYRUN APP LAUNCHER
+  # ==========================================================================
+  
+  xdg.configFile."anyrun/config.ron".text = ''
+    Config(
+      x: Fraction(0.5),
+      y: Fraction(0.3),
+      width: Absolute(800),
+      height: Absolute(0),
+      hide_plugin_info: false,
+      close_on_click: true,
+      show_results_immediately: true,
+      max_entries: 10,
+      plugins: [
+        "libapplications.so",
+        "libsymbols.so",
+        "libshell.so",
+      ],
+    )
+  '';
+  
+  xdg.configFile."anyrun/style.css".source = ./anyrun-style.css;
+  
+  # ==========================================================================
+  # SWAYNOTIFICATIONCENTER
+  # ==========================================================================
+  
+  services.swaync.enable = true;
+  catppuccin.swaync.enable = true;
+  
+  # ==========================================================================
+  # SWAYLOCK-EFFECTS
+  # ==========================================================================
+
+  programs.swaylock = {
+  enable = true;
+  package = pkgs.swaylock-effects;
+  settings = {
+    screenshots = true;
+    clock = true;
+    effect-blur = "7x5";
+    effect-vignette = "0.5:0.5";
+    fade-in = "0.2";
+    
+    timestr = "%H:%M";
+    datestr = "%A, %d %B";
+    font = "JetBrainsMono Nerd Font";
+    
+    indicator = true;
+    indicator-radius = 100;
+    indicator-thickness = 10;
+  };
+};
+
+catppuccin.swaylock.enable = true;
+  
+  
+  # ==========================================================================
+  # SWAYIDLE
+  # ==========================================================================
+  
+  services.swayidle = {
+    enable = true;
+    events = [
+      { event = "before-sleep"; command = "${pkgs.swaylock-effects}/bin/swaylock -f"; }
+    ];
+    timeouts = [
+      { timeout = 300; command = "${pkgs.swaylock-effects}/bin/swaylock -f"; }
+      { 
+        timeout = 600; 
+        command = "${pkgs.niri}/bin/niri msg action power-off-monitors";
+        resumeCommand = "${pkgs.niri}/bin/niri msg action power-on-monitors";
+      }
+    ];
+  };
+
   # Let Home Manager manage itself
   programs.home-manager.enable = true;
+
 }
