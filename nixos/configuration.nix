@@ -277,14 +277,14 @@
     poetry
 
     # TypeScript/Node.js
-    nodejs_24
-    nodePackages.npm
-    nodePackages.pnpm
-    nodePackages.yarn
-    nodePackages.typescript
-    nodePackages.typescript-language-server
-    nodePackages.eslint
-    nodePackages.prettier
+    # nodejs_24
+    # nodePackages.npm
+    # nodePackages.pnpm
+    # nodePackages.yarn
+    # nodePackages.typescript
+    # nodePackages.typescript-language-server
+    # nodePackages.eslint
+    # nodePackages.prettier
 
     # Rust
     rustup
@@ -293,8 +293,6 @@
 
     # Zig
     zig
-    # Elixir
-    beamMinimal28Packages.elixir
     # Go
     go
 
@@ -308,7 +306,6 @@
 
     # --- Editors & IDEs ---
     neovim
-    # Zed editor (FOSS, Rust-based, fast)
     zed-editor
 
     # --- JetBrains IDEs ---
@@ -319,18 +316,14 @@
     git
     git-lfs
     lazygit
-    gh  # GitHub CLI
+    gh
 
     # --- Containers & Cloud ---
     docker-compose
     lazydocker
-    kubectl
-    k9s
-    helm
-    terraform
 
     # --- API Development ---
-    bruno  # FOSS API client
+    bruno
 
     # --- Browsers ---
     brave
@@ -343,8 +336,6 @@
     vlc
     mpv
     ffmpeg
-
-    # --- Jellyfin ---
     jellyfin
     jellyfin-web
     jellyfin-ffmpeg
