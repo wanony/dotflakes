@@ -1,7 +1,6 @@
 { config, pkgs, inputs, lib, username, hostname, ... }:
 
 {
-  imports = [./niri.nix];
   system.stateVersion = "25.11";
   nix = {
     settings = {
@@ -121,16 +120,15 @@
 
   # Portal services for Wayland (screen sharing, file dialogs, etc.)
   xdg.portal = {
-  enable = true;
-  extraPortals = with pkgs; [
-    xdg-desktop-portal-gnome
-    xdg-desktop-portal-gtk
-  ];
-  config = {
-    common.default = "gnome";
-    niri.default = ["gnome" "gtk"];
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gnome
+      xdg-desktop-portal-gtk
+    ];
+    config = {
+      common.default = "gnome";
+    };
   };
-};
 
   security.rtkit.enable = true;
   services.pipewire = {
@@ -185,7 +183,7 @@
   networking.firewall = {
     checkReversePath = false; # for vpn
     enable = true;
-    allowedTCPPorts = [ 22 80 443 ];
+    allowedTCPPorts = [ 22 80 443 8096 8920 ];  # Added 8096 (Jellyfin HTTP) and 8920 (Jellyfin HTTPS)
     # For development servers
     allowedTCPPortRanges = [
       { from = 3000; to = 3100; }  # Dev servers
@@ -279,7 +277,7 @@
     poetry
 
     # TypeScript/Node.js
-    nodejs_22
+    nodejs_24
     nodePackages.npm
     nodePackages.pnpm
     nodePackages.yarn
@@ -287,8 +285,6 @@
     nodePackages.typescript-language-server
     nodePackages.eslint
     nodePackages.prettier
-    deno
-    bun
 
     # Rust
     rustup
@@ -316,11 +312,8 @@
     zed-editor
 
     # --- JetBrains IDEs ---
-    jetbrains.idea-ultimate      # IntelliJ IDEA
-    jetbrains.pycharm-professional  # PyCharm
-    jetbrains.webstorm           # WebStorm for TS
+    jetbrains.idea      # IntelliJ IDEA
     jetbrains.rust-rover         # Rust IDE
-    # jetbrains.rider
 
     # --- Version Control ---
     git
@@ -350,6 +343,11 @@
     vlc
     mpv
     ffmpeg
+
+    # --- Jellyfin ---
+    jellyfin
+    jellyfin-web
+    jellyfin-ffmpeg
 
     # --- VPN ---
     wireguard-tools
@@ -447,15 +445,11 @@
     # Flatpak
     flatpak.enable = true;
 
-    # GNOME services
-    gnome = {
-      gnome-keyring.enable = true;
-      sushi.enable = true;  # File previewer
+    # Jellyfin Media Server
+    jellyfin = {
+      enable = true;
+      group = "users";
     };
-
-    # DBus for Nautilus in Niri
-    dbus.packages = [ pkgs.nautilus ];
-
   };
 
   # ==========================================================================
@@ -478,16 +472,17 @@
   };
 
   # security.sudo.wheelNeedsPassword = false;
-systemd.user.services.protonvpn-autoconnect = {
-  description = "Auto connect to VPN";
-  wantedBy = [ "graphical-session.target" ];
-  after = [ "graphical-session.target" ];
-  serviceConfig = {
-    Type = "oneshot";
-    ExecStart = "${pkgs.protonvpn-gui}/bin/protonvpn-cli connect --fastest";
-    RemainAfterExit = true;
+
+  systemd.user.services.protonvpn-autoconnect = {
+    description = "Auto connect to VPN";
+    wantedBy = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.protonvpn-gui}/bin/protonvpn-cli connect --fastest";
+      RemainAfterExit = true;
+    };
   };
-};
 
   # ==========================================================================
   # ENVIRONMENT VARIABLES

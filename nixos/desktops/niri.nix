@@ -2,7 +2,7 @@
 
 {
   # Enable Niri window manager
-  # This automatically registers niri as a session in GDM
+  # This automatically registers niri as a session in GDM/SDDM
   programs.niri = {
     enable = true;
     package = pkgs.niri;
@@ -15,7 +15,9 @@
       xdg-desktop-portal-gnome
       xdg-desktop-portal-gtk
     ];
-    # Don't override the portal config - let configuration.nix handle it
+    config = {
+      niri.default = ["gnome" "gtk"];
+    };
   };
 
   # Polkit authentication agent
@@ -42,12 +44,6 @@
     # Wallpaper
     swaybg
 
-    # App launcher
-    anyrun
-
-    # Status bar (Eww)
-    eww
-
     # Idle management
     swayidle
 
@@ -67,9 +63,6 @@
 
   # Enable required services
   services.dbus.enable = true;
-
-  # PipeWire for audio (already enabled, but ensuring)
-  services.pipewire.enable = true;
 
   # Enable seat management
   services.logind.settings = {

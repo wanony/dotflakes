@@ -22,10 +22,10 @@
           permittedInsecurePackages = [];
         };
       };
-      
+
       username = "wman";
       hostname = "nixos";
-      
+
     in {
       nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
         inherit system;

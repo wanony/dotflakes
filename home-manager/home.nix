@@ -652,6 +652,300 @@
   };
 
   # ==========================================================================
+  # NEOVIM WITH LSP AND PLUGINS
+  # ==========================================================================
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+
+    plugins = with pkgs.vimPlugins; [
+      # LSP and completion
+      nvim-lspconfig
+      mason-nvim
+      mason-lspconfig-nvim
+      nvim-cmp
+      cmp-nvim-lsp
+      cmp-buffer
+      cmp-path
+      cmp-cmdline
+      luasnip
+      cmp_luasnip
+      friendly-snippets
+
+      # TypeScript specific
+      typescript-tools-nvim
+      nvim-ts-autotag
+
+      # Treesitter for syntax highlighting
+      (nvim-treesitter.withPlugins (p: [
+        p.python
+        p.typescript
+        p.tsx
+        p.javascript
+        p.json
+        p.html
+        p.css
+        p.rust
+        p.go
+        p.lua
+        p.nix
+        p.bash
+        p.markdown
+        p.yaml
+        p.toml
+      ]))
+
+      # Git integration
+      gitsigns-nvim
+      vim-fugitive
+
+      # File navigation
+      telescope-nvim
+      telescope-fzf-native-nvim
+      nvim-web-devicons
+
+      # UI enhancements
+      lualine-nvim
+      bufferline-nvim
+      indent-blankline-nvim
+
+      # Color scheme
+      catppuccin-nvim
+
+      # Auto pairs
+      nvim-autopairs
+
+      # Comment plugin
+      comment-nvim
+
+      # Which-key for keybinding help
+      which-key-nvim
+
+      # Formatting
+      conform-nvim
+    ];
+
+    extraLuaConfig = ''
+      -- Basic settings
+      vim.opt.number = true
+      vim.opt.relativenumber = true
+      vim.opt.expandtab = true
+      vim.opt.shiftwidth = 2
+      vim.opt.tabstop = 2
+      vim.opt.smartindent = true
+      vim.opt.wrap = false
+      vim.opt.swapfile = false
+      vim.opt.backup = false
+      vim.opt.undofile = true
+      vim.opt.hlsearch = false
+      vim.opt.incsearch = true
+      vim.opt.termguicolors = true
+      vim.opt.scrolloff = 8
+      vim.opt.signcolumn = "yes"
+      vim.opt.updatetime = 50
+      vim.opt.colorcolumn = "100"
+      vim.opt.cursorline = true
+      vim.opt.mouse = "a"
+      vim.opt.clipboard = "unnamedplus"
+      vim.g.mapleader = " "
+
+      -- Catppuccin theme
+      require("catppuccin").setup({
+        flavour = "mocha",
+        integrations = {
+          treesitter = true,
+          telescope = true,
+          gitsigns = true,
+          mason = true,
+          cmp = true,
+          which_key = true,
+        },
+      })
+      vim.cmd.colorscheme("catppuccin")
+
+      -- Treesitter
+      require("nvim-treesitter.configs").setup({
+        highlight = { enable = true },
+        indent = { enable = true },
+        autotag = { enable = true },
+      })
+
+      -- LSP Setup with Mason
+      require("mason").setup()
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "pyright",
+          "rust_analyzer",
+          "gopls",
+          "lua_ls",
+          "nil_ls",
+        },
+      })
+
+      -- LSP capabilities for completion
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      -- Python LSP (Pyright)
+      require("lspconfig").pyright.setup({
+        capabilities = capabilities,
+        settings = {
+          python = {
+            analysis = {
+              typeCheckingMode = "basic",
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+            },
+          },
+        },
+      })
+
+      -- TypeScript Tools (replaces tsserver)
+      require("typescript-tools").setup({
+        capabilities = capabilities,
+        settings = {
+          tsserver_file_preferences = {
+            includeInlayParameterNameHints = "all",
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+          },
+        },
+      })
+
+      -- Other LSPs
+      require("lspconfig").rust_analyzer.setup({ capabilities = capabilities })
+      require("lspconfig").gopls.setup({ capabilities = capabilities })
+      require("lspconfig").lua_ls.setup({
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            diagnostics = { globals = { "vim" } },
+          },
+        },
+      })
+      require("lspconfig").nil_ls.setup({ capabilities = capabilities })
+
+      -- LSP keybindings
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(ev)
+          local opts = { buffer = ev.buf }
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+          vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+          vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, opts)
+        end,
+      })
+
+      -- Completion setup
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+      require("luasnip.loaders.from_vscode").lazy_load()
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+          { name = "buffer" },
+          { name = "path" },
+        }),
+      })
+
+      -- Telescope
+      require("telescope").setup({
+        defaults = {
+          file_ignore_patterns = { "node_modules", ".git/" },
+        },
+      })
+      require("telescope").load_extension("fzf")
+
+      -- Telescope keybindings
+      local builtin = require("telescope.builtin")
+      vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
+      vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
+      vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
+      vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
+
+      -- Lualine
+      require("lualine").setup({
+        options = { theme = "catppuccin" },
+      })
+
+      -- Bufferline
+      require("bufferline").setup({
+        options = {
+          separator_style = "slant",
+        },
+      })
+
+      -- Gitsigns
+      require("gitsigns").setup()
+
+      -- Autopairs
+      require("nvim-autopairs").setup()
+
+      -- Comment
+      require("Comment").setup()
+
+      -- Which-key
+      require("which-key").setup()
+
+      -- Conform (formatting)
+      require("conform").setup({
+        formatters_by_ft = {
+          python = { "black" },
+          typescript = { "prettier" },
+          javascript = { "prettier" },
+          typescriptreact = { "prettier" },
+          javascriptreact = { "prettier" },
+          json = { "prettier" },
+          html = { "prettier" },
+          css = { "prettier" },
+          rust = { "rustfmt" },
+          nix = { "nixpkgs_fmt" },
+        },
+        format_on_save = {
+          timeout_ms = 500,
+          lsp_fallback = true,
+        },
+      })
+
+      -- General keybindings
+      vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
+      vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+      vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+      vim.keymap.set("n", "<C-d>", "<C-d>zz")
+      vim.keymap.set("n", "<C-u>", "<C-u>zz")
+      vim.keymap.set("n", "n", "nzzzv")
+      vim.keymap.set("n", "N", "Nzzzv")
+    '';
+  };
+
+  # ==========================================================================
   # FILE MANAGER - YAZI
   # ==========================================================================
 
@@ -692,99 +986,6 @@
       theme = "Catppuccin Mocha";
       style = "numbers,changes,header";
     };
-  };
-
-  # ==========================================================================
-  # NIRI CONFIGURATION
-  # ==========================================================================
-
-  xdg.configFile."niri/config.kdl".source = ./niri-config.kdl;
-
-  # ==========================================================================
-  # EWW STATUS BAR
-  # ==========================================================================
-
-  programs.eww = {
-    enable = true;
-    package = pkgs.eww;
-    configDir = ./eww;
-  };
-
-  # ==========================================================================
-  # ANYRUN APP LAUNCHER
-  # ==========================================================================
-
-  xdg.configFile."anyrun/config.ron".text = ''
-    Config(
-      x: Fraction(0.5),
-      y: Fraction(0.3),
-      width: Absolute(800),
-      height: Absolute(0),
-      hide_plugin_info: false,
-      close_on_click: true,
-      show_results_immediately: true,
-      max_entries: 10,
-      plugins: [
-        "libapplications.so",
-        "libsymbols.so",
-        "libshell.so",
-      ],
-    )
-  '';
-
-  xdg.configFile."anyrun/style.css".source = ./anyrun-style.css;
-
-  # ==========================================================================
-  # SWAYNOTIFICATIONCENTER
-  # ==========================================================================
-
-  services.swaync.enable = true;
-  catppuccin.swaync.enable = true;
-
-  # ==========================================================================
-  # SWAYLOCK-EFFECTS
-  # ==========================================================================
-
-  programs.swaylock = {
-  enable = true;
-  package = pkgs.swaylock-effects;
-  settings = {
-    screenshots = true;
-    clock = true;
-    effect-blur = "7x5";
-    effect-vignette = "0.5:0.5";
-    fade-in = "0.2";
-
-    timestr = "%H:%M";
-    datestr = "%A, %d %B";
-    font = "JetBrainsMono Nerd Font";
-
-    indicator = true;
-    indicator-radius = 100;
-    indicator-thickness = 10;
-  };
-};
-
-catppuccin.swaylock.enable = true;
-
-
-  # ==========================================================================
-  # SWAYIDLE
-  # ==========================================================================
-
-  services.swayidle = {
-    enable = true;
-    events = [
-      { event = "before-sleep"; command = "${pkgs.swaylock-effects}/bin/swaylock -f"; }
-    ];
-    timeouts = [
-      { timeout = 300; command = "${pkgs.swaylock-effects}/bin/swaylock -f"; }
-      {
-        timeout = 600;
-        command = "${pkgs.niri}/bin/niri msg action power-off-monitors";
-        resumeCommand = "${pkgs.niri}/bin/niri msg action power-on-monitors";
-      }
-    ];
   };
 
   # Let Home Manager manage itself

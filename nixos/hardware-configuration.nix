@@ -24,6 +24,12 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
+  fileSystems."/mnt/railgun" =
+    { device = "/dev/disk/by-uuid/67827DD118BC4715";
+      fsType = "ntfs3";
+      options = [ "rw" "uid=1000" "gid=100" "dmask=022" "fmask=133" ];
+    };
+
   swapDevices =
     [ { device = "/dev/disk/by-uuid/bb235bb4-ec61-4fa8-a973-88086f037ae8"; }
     ];
