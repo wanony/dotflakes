@@ -85,7 +85,7 @@
 
     sessionVariables = {
       TERMINAL = "kgx";
-      BROWSER = "firefox";
+      BROWSER = "floorp";
     };
   };
 
@@ -160,7 +160,7 @@
     # Super+B = Browser
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
       name = "Browser";
-      command = "firefox";
+      command = "floorp";
       binding = "<Super>b";
     };
 
@@ -199,8 +199,8 @@
     # GNOME Shell settings
     "org/gnome/shell" = {
       favorite-apps = [
-        "firefox.desktop"
-        "org.gnome.Terminal.desktop"
+        "floorp.desktop"
+        "org.gnome.Console.desktop"
         "org.gnome.Nautilus.desktop"
         "equibop.desktop"
       ];

@@ -68,6 +68,49 @@
     initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
   };
 
+  # ==========================================================================
+  # FILESYSTEM MOUNTS
+  # ==========================================================================
+
+  fileSystems."/mnt/railgun" = {
+    device = "/dev/disk/by-uuid/67827DD118BC4715";
+    fsType = "ntfs-3g";
+    options = [
+      "rw"
+      "uid=1000"
+      "gid=100"
+      "recover"
+      "windows_names"
+      "nofail"
+    ];
+  };
+
+  fileSystems."/mnt/gehenna" = {
+    device = "/dev/disk/by-uuid/52F2F547F2F52FB9";
+    fsType = "ntfs-3g";
+    options = [
+      "rw"
+      "uid=1000"
+      "gid=100"
+      "recover"
+      "windows_names"
+      "nofail"
+    ];
+  };
+
+  fileSystems."/mnt/2tbwd" = {
+    device = "/dev/disk/by-uuid/0C04D59204D57EE0";
+    fsType = "ntfs-3g";
+    options = [
+      "rw"
+      "uid=1000"
+      "gid=100"
+      "recover"
+      "windows_names"
+      "nofail"
+    ];
+  };
+
   nixpkgs.config.allowUnfree = true;
   hardware = {
     enableRedistributableFirmware = true;
@@ -327,7 +370,7 @@
 
     # --- Browsers ---
     brave
-    firefox
+    floorp-bin
 
     # --- Communication ---
     equibop  # Enhanced Discord client
