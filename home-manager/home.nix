@@ -138,8 +138,7 @@
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/"
-      ];
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/"      ];
       area-screenshot = [ "<Super><Shift>s" ];
     };
 
@@ -190,10 +189,9 @@
       move-to-workspace-4 = [ "<Super><Shift>4" ];
     };
 
-    # Shell keybindings - Super+Space for app search (like Spotlight)
+    # Shell keybindings
     "org/gnome/shell/keybindings" = {
       toggle-application-view = [ "<Super>a" ];
-      toggle-overview = [ "<Super>space" ];  # Spotlight-like search
     };
 
     # GNOME Shell settings
@@ -680,23 +678,7 @@
       nvim-ts-autotag
 
       # Treesitter for syntax highlighting
-      (nvim-treesitter.withPlugins (p: [
-        p.python
-        p.typescript
-        p.tsx
-        p.javascript
-        p.json
-        p.html
-        p.css
-        p.rust
-        p.go
-        p.lua
-        p.nix
-        p.bash
-        p.markdown
-        p.yaml
-        p.toml
-      ]))
+      nvim-treesitter.withAllGrammars
 
       # Git integration
       gitsigns-nvim
