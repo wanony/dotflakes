@@ -10,6 +10,7 @@
     # Catppuccin theming
     catppuccin.url = "github:catppuccin/nix";
     grub2-themes.url = "github:vinceliuice/grub2-themes";
+    claude-code.url = "github:sadjow/claude-code-nix";
   };
 
   outputs = { self, nixpkgs, home-manager, catppuccin, grub2-themes, ... }@inputs:

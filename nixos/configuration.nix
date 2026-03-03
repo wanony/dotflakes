@@ -1,5 +1,9 @@
 { config, pkgs, inputs, lib, username, hostname, ... }:
 
+let
+  claude-code-overlay = inputs.claude-code.overlays.default;
+in
+
 {
   system.stateVersion = "25.11";
   nix = {
@@ -8,9 +12,11 @@
       auto-optimise-store = true;
       substituters = [
         "https://cache.nixos.org"
+        "https://claude-code.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
       ];
     };
     gc = {
@@ -112,6 +118,19 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+
+  nixpkgs.overlays = [
+    claude-code-overlay
+    # Work around upstream sphinx/docutils build failure for python3.12-doc
+    (final: prev: {
+      python312 = prev.python312.overrideAttrs (old: {
+        passthru = old.passthru // {
+          doc = final.emptyDirectory;
+        };
+      });
+    })
+  ];
+
   hardware = {
     enableRedistributableFirmware = true;
     firmware = [ pkgs.linux-firmware ];
@@ -319,15 +338,8 @@
     python312Packages.ipython
     poetry
 
-    # TypeScript/Node.js
-    # nodejs_24
-    # nodePackages.npm
-    # nodePackages.pnpm
-    # nodePackages.yarn
-    # nodePackages.typescript
-    # nodePackages.typescript-language-server
-    # nodePackages.eslint
-    # nodePackages.prettier
+    # Deno
+    deno
 
     # Rust
     rustup
@@ -399,6 +411,7 @@
     }))
 
     # --- Media ---
+    euphonica
     vlc
     mpv
     ffmpeg
@@ -506,6 +519,19 @@
     jellyfin = {
       enable = true;
       group = "users";
+    };
+
+    # MPD (required by Euphonica)
+    mpd = {
+      enable = true;
+      user = username;
+      musicDirectory = "/home/${username}/Music";
+      settings = {
+        audio_output = [{
+          type = "pipewire";
+          name = "PipeWire Output";
+        }];
+      };
     };
   };
 

@@ -27,6 +27,9 @@
       # Rust tools
       rust-analyzer
 
+      # Claude Code
+      claude-code
+
       # Terminal enhancements
       zsh-autosuggestions
       zsh-syntax-highlighting
@@ -710,7 +713,7 @@
       conform-nvim
     ];
 
-    extraLuaConfig = ''
+    initLua = ''
       -- Basic settings
       vim.opt.number = true
       vim.opt.relativenumber = true
@@ -934,6 +937,7 @@
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;
+    shellWrapperName = "y";
     settings = {
       manager = {
         show_hidden = true;
