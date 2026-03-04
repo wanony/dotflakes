@@ -520,19 +520,6 @@ in
       enable = true;
       group = "users";
     };
-
-    # MPD (required by Euphonica)
-    mpd = {
-      enable = true;
-      user = username;
-      musicDirectory = "/home/${username}/Music";
-      settings = {
-        audio_output = [{
-          type = "pipewire";
-          name = "PipeWire Output";
-        }];
-      };
-    };
   };
 
   # ==========================================================================

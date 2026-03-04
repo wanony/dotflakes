@@ -974,6 +974,22 @@
     };
   };
 
+  # ==========================================================================
+  # MPD (Music Player Daemon) - user service so it can access PipeWire
+  # ==========================================================================
+
+  services.mpd = {
+    enable = true;
+    musicDirectory = "/mnt/railgun/music";
+    extraConfig = ''
+      audio_output {
+        type "pipewire"
+        name "PipeWire Output"
+      }
+      auto_update "yes"
+    '';
+  };
+
   # Let Home Manager manage itself
   programs.home-manager.enable = true;
 
