@@ -974,10 +974,6 @@
     };
   };
 
-  # ==========================================================================
-  # MPD (Music Player Daemon) - user service so it can access PipeWire
-  # ==========================================================================
-
   services.mpd = {
     enable = true;
     musicDirectory = "/mnt/railgun/music";
