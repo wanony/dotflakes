@@ -1,5 +1,5 @@
 {
-  description = "wman's NixOS Development Configuration with GNOME";
+  description = "wman's NixOS Configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -16,35 +16,46 @@
   outputs = { self, nixpkgs, home-manager, catppuccin, grub2-themes, ... }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        config = {
-          allowUnfree = true;
-          permittedInsecurePackages = [];
-        };
-      };
 
-      username = "wman";
-      hostname = "nixos";
+      mkHost = { hostname, username, systemModules, hmUser }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs username hostname; };
+          modules = systemModules ++ [
+            grub2-themes.nixosModules.default
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = { inherit inputs username; };
+                users.${username} = hmUser;
+              };
+            }
+          ];
+        };
 
     in {
-      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit inputs username hostname; };
-        modules = [
+      # Main desktop: GNOME + Wayland + NVIDIA (AMD CPU), user wman
+      nixosConfigurations.nixos = mkHost {
+        hostname = "nixos";
+        username = "wman";
+        systemModules = [
           ./nixos/hardware-configuration.nix
           ./nixos/configuration.nix
-          grub2-themes.nixosModules.default
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = { inherit inputs username; };
-              users.${username} = import ./home-manager/home.nix;
-            };
-          }
         ];
+        hmUser = import ./home-manager/home.nix;
+      };
+
+      # Homelab laptop: XFCE + X11 + Intel i5-2520M, user gigi
+      nixosConfigurations.homelab = mkHost {
+        hostname = "homelab";
+        username = "gigi";
+        systemModules = [
+          ./nixos/homelab/hardware-configuration.nix
+          ./nixos/homelab/configuration.nix
+        ];
+        hmUser = import ./home-manager/homelab/home.nix;
       };
     };
 }
