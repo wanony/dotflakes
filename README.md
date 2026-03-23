@@ -1,11 +1,11 @@
 # NixOS Development Workstation
 
-A NixOS + Home Manager flake-based configuration featuring GNOME desktop, NVIDIA GPU support, and comprehensive development tooling with Catppuccin Mocha theming.
+A NixOS + Home Manager flake-based configuration featuring KDE Plasma 6, NVIDIA GPU support, and comprehensive development tooling with Catppuccin Mocha theming.
 
 **System Profile:**
 - Username: `wman`
 - Hostname: `nixos`
-- Desktop: GNOME (GDM) with Wayland
+- Desktop: KDE Plasma 6 (SDDM) with Wayland
 - GPU: NVIDIA GTX 1080 (Pascal)
 - Theme: Catppuccin Mocha with Mauve accent
 
@@ -63,7 +63,7 @@ rustup component add rust-src rust-analyzer
 
 ### System Tools
 
-- **Terminal:** GNOME Console
+- **Terminal:** Konsole
 - **Shell:** Zsh with autosuggestions, syntax highlighting, Starship prompt
 - **File Managers:** Nautilus, Yazi (TUI)
 - **Browsers:** Brave, Firefox
@@ -74,19 +74,9 @@ rustup component add rust-src rust-analyzer
 
 Catppuccin Mocha theme applied to GTK, Qt/Kvantum, FZF, Bat, Delta, and more. JetBrainsMono Nerd Font throughout.
 
-## GNOME Keybindings
+## KDE Keybindings
 
-| Keybind | Action |
-|---------|--------|
-| `Super+Space` | App Search (Overview) |
-| `Super+Return` | Terminal |
-| `Super+E` | File Manager |
-| `Super+B` | Browser |
-| `Super+D` | Discord |
-| `Super+Q` | Close Window |
-| `Super+F` | Toggle Maximize |
-| `Super+1-4` | Switch to Workspace 1-4 |
-| `Super+Shift+1-4` | Move Window to Workspace 1-4 |
+KDE keybindings are configured via System Settings → Shortcuts. Default KDE shortcuts apply; custom shortcuts can be added to `home-manager/home.nix` via `xdg.configFile."kglobalshortcutsrc"` once finalised.
 
 ## Shell Aliases
 
@@ -128,7 +118,7 @@ cat    # bat (syntax highlighting)
 ```
 
 **System Layer** (`nixos/`): Hardware, boot, services, system packages  
-**User Layer** (`home-manager/`): Shell, user packages, GNOME settings, theming
+**User Layer** (`home-manager/`): Shell, user packages, KDE settings, theming
 
 ## Common Tasks
 
@@ -148,11 +138,13 @@ sudo nixos-rebuild switch --rollback          # Rollback to previous
 **System-wide:** Add to `environment.systemPackages` in `nixos/configuration.nix`  
 **User-only:** Add to `home.packages` in `home-manager/home.nix`
 
-### Modify GNOME Settings
-Edit `dconf.settings` in `home-manager/home.nix`. Find paths with:
-```bash
-dconf watch /
-# Change setting in GUI to see the path
+### Modify KDE Settings
+KDE settings live as INI files in `~/.config/`. To declaratively manage them, add entries to `xdg.configFile` in `home-manager/home.nix`:
+```nix
+xdg.configFile."kglobalshortcutsrc".text = ''
+  [konsole]
+  ...
+'';
 ```
 
 ## Troubleshooting
@@ -168,9 +160,9 @@ nvtop                                # Monitor GPU
 
 ### Services
 ```bash
-systemctl status gdm                 # Display manager
+systemctl status sddm                # Display manager
 systemctl --user status pipewire     # Audio
-journalctl -u gdm -f                 # Live logs
+journalctl -u sddm -f                # Live logs
 ```
 
 ### Firewall
@@ -178,6 +170,7 @@ Development ports open by default:
 - 3000-3100: Node.js/React/Vue
 - 5000-5100: Flask/Python
 - 8000-8100: Django/HTTP
+- 21115-21119 TCP + 21116 UDP: RustDesk (remote desktop)
 
 
 

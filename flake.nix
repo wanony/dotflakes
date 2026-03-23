@@ -36,7 +36,7 @@
         };
 
     in {
-      # Main desktop: GNOME + Wayland + NVIDIA (AMD CPU), user wman
+      # Main desktop: KDE Plasma 6 + Wayland + NVIDIA (AMD CPU), user wman
       nixosConfigurations.nixos = mkHost {
         hostname = "nixos";
         username = "wman";

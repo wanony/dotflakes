@@ -45,25 +45,8 @@ in
   };
   boot = {
     loader = {
-      efi = {
-        canTouchEfiVariables = true;
-        efiSysMountPoint = "/boot";
-      };
-      grub = {
-        enable = true;
-        devices = [ "nodev" ];
-        efiSupport = true;
-        useOSProber = true;
-      };
-
-      systemd-boot.enable = false;
-    };
-
-    loader.grub2-theme = {
-      enable = true;
-      theme = "whitesur";
-      footer = true;
-      screen = "ultrawide2k";
+      limine.enable = true;
+      efi.canTouchEfiVariables = true;
     };
 
     kernelParams = [ "quiet" "splash" "nvidia_drm.modeset=1" ];
@@ -141,7 +124,7 @@ in
     };
 
     nvidia = {
-      # Modesetting is required for Wayland compositors (GNOME)
+      # Modesetting is required for Wayland compositors
       modesetting.enable = true;
       # Enable if you experience graphical corruption after waking from sleep
       powerManagement.enable = false;
@@ -171,26 +154,15 @@ in
     };
   };
 
-  # GNOME Desktop Environment
-  services.displayManager.gdm = {
+  # KDE Plasma 6 Desktop Environment
+  services.displayManager.sddm = {
     enable = true;
-    wayland = true;
+    wayland.enable = true;
   };
-  services.desktopManager.gnome.enable = true;
+  services.desktopManager.plasma6.enable = true;
   programs.xwayland.enable = true;
-  programs.dconf.enable = true;
 
-  # Portal services for Wayland (screen sharing, file dialogs, etc.)
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gnome
-      xdg-desktop-portal-gtk
-    ];
-    config = {
-      common.default = "gnome";
-    };
-  };
+  # xdg portal is configured automatically by services.desktopManager.plasma6
 
   security.rtkit.enable = true;
   services.pipewire = {
@@ -245,7 +217,8 @@ in
   networking.firewall = {
     checkReversePath = false; # for vpn
     enable = true;
-    allowedTCPPorts = [ 22 80 443 8096 8920 ];  # Added 8096 (Jellyfin HTTP) and 8920 (Jellyfin HTTPS)
+    allowedTCPPorts = [ 22 80 443 8096 8920 21115 21116 21117 21118 21119 ];
+    allowedUDPPorts = [ 21116 ];
     # For development servers
     allowedTCPPortRanges = [
       { from = 3000; to = 3100; }  # Dev servers
@@ -301,7 +274,7 @@ in
 
   environment.systemPackages = with pkgs; [
     # --- Terminal Emulator ---
-    gnome-console  # Modern GNOME terminal (replaces gnome-terminal)
+    kdePackages.konsole
 
     # --- Core CLI Tools ---
     coreutils
@@ -436,11 +409,9 @@ in
     vulkan-tools  # Check Vulkan info
     libva-utils  # Check VA-API (video acceleration)
 
-    # --- GNOME Utilities ---
+    # --- Clipboard & Remote ---
     wl-clipboard
-    gnome-tweaks
-    gnome-extension-manager
-    dconf-editor
+    rustdesk
 
     # --- File Management ---
     nautilus
@@ -464,7 +435,7 @@ in
 
     # --- Security ---
     gnupg
-    pinentry-gnome3
+    pinentry-qt
     keepassxc
   ];
 
@@ -489,7 +460,7 @@ in
       nix-direnv.enable = true;
     };
 
-    seahorse.enable = true;
+    kdeconnect.enable = true;
   };
 
   # ==========================================================================
@@ -581,7 +552,7 @@ in
     GOPATH = "$HOME/go";
 
     # XDG
-    XDG_CURRENT_DESKTOP = "gnome";
+    XDG_CURRENT_DESKTOP = "KDE";
   };
 
   environment.pathsToLink = [ "/share/zsh" ];

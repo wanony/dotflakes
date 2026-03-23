@@ -87,7 +87,7 @@
     };
 
     sessionVariables = {
-      TERMINAL = "kgx";
+      TERMINAL = "konsole";
       BROWSER = "floorp";
     };
   };
@@ -131,109 +131,11 @@
   };
 
   # ==========================================================================
-  # GNOME CONFIGURATION & KEYBINDINGS
+  # KDE PLASMA CONFIGURATION
   # ==========================================================================
-
-  dconf.settings = {
-    # Custom keybindings
-    "org/gnome/settings-daemon/plugins/media-keys" = {
-      custom-keybindings = [
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/"      ];
-      area-screenshot = [ "<Super><Shift>s" ];
-    };
-
-    # Super+Return = Terminal
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "Terminal";
-      command = "kgx";
-      binding = "<Super>Return";
-    };
-
-    # Super+E = File Manager
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-      name = "File Manager";
-      command = "nautilus";
-      binding = "<Super>e";
-    };
-
-    # Super+B = Browser
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
-      name = "Browser";
-      command = "floorp";
-      binding = "<Super>b";
-    };
-
-    # Super+D = Discord (Equibop)
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3" = {
-      name = "Discord";
-      command = "equibop";
-      binding = "<Super>d";
-    };
-
-    # Window management keybindings
-    "org/gnome/desktop/wm/keybindings" = {
-      close = [ "<Super>q" ];
-      toggle-maximized = [ "<Super>f" ];
-      toggle-fullscreen = [ "<Super><Shift>f" ];
-
-      # Workspace switching
-      switch-to-workspace-1 = [ "<Super>1" ];
-      switch-to-workspace-2 = [ "<Super>2" ];
-      switch-to-workspace-3 = [ "<Super>3" ];
-      switch-to-workspace-4 = [ "<Super>4" ];
-
-      # Move window to workspace
-      move-to-workspace-1 = [ "<Super><Shift>1" ];
-      move-to-workspace-2 = [ "<Super><Shift>2" ];
-      move-to-workspace-3 = [ "<Super><Shift>3" ];
-      move-to-workspace-4 = [ "<Super><Shift>4" ];
-    };
-
-    # Shell keybindings
-    "org/gnome/shell/keybindings" = {
-      toggle-application-view = [ "<Super>a" ];
-    };
-
-    # GNOME Shell settings
-    "org/gnome/shell" = {
-      favorite-apps = [
-        "floorp.desktop"
-        "org.gnome.Console.desktop"
-        "org.gnome.Nautilus.desktop"
-        "equibop.desktop"
-      ];
-      disable-user-extensions = false;
-    };
-
-    # Desktop settings
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-      enable-animations = true;
-      font-antialiasing = "rgba";
-      font-hinting = "slight";
-    };
-
-    # Workspaces
-    "org/gnome/mutter" = {
-      dynamic-workspaces = false;
-      workspaces-only-on-primary = true;
-    };
-
-    "org/gnome/desktop/wm/preferences" = {
-      num-workspaces = 4;
-      workspace-names = [ "Code" "Web" "Chat" "Media" ];
-    };
-
-    # Touchpad settings (if on laptop)
-    "org/gnome/desktop/peripherals/touchpad" = {
-      tap-to-click = true;
-      natural-scroll = true;
-      two-finger-scrolling-enabled = true;
-    };
-  };
+  # KDE stores its config in INI-format files under ~/.config — managed by
+  # Plasma itself. Keybindings and desktop settings can be configured here
+  # via xdg.configFile once you have your preferred KDE settings dialled in.
 
   # ==========================================================================
   # ZSH CONFIGURATION WITH COMPLETIONS
