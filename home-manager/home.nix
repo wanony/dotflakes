@@ -888,6 +888,11 @@
     '';
   };
 
+  programs.opencode = {
+    enable = true;
+    package = pkgs.opencode;
+  };
+
   # Let Home Manager manage itself
   programs.home-manager.enable = true;
 
