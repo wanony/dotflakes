@@ -359,7 +359,7 @@ in
     floorp-bin
 
     # --- Communication ---
-    pkgs.equibop
+    pkgs.vesktop
 
     # --- Media ---
     euphonica
