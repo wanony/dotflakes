@@ -359,7 +359,12 @@ in
     floorp-bin
 
     # --- Communication ---
-    pkgs.vesktop
+    # --disable-gpu works around blank window on NVIDIA + Wayland
+    (pkgs.vesktop.overrideAttrs (old: {
+      postFixup = (old.postFixup or "") + ''
+        wrapProgram $out/bin/vesktop --add-flags "--disable-gpu"
+      '';
+    }))
 
     # --- Media ---
     euphonica
