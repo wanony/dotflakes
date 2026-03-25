@@ -121,6 +121,9 @@ in
       enable = true;
       # Enable 32-bit support for Steam, Wine, etc.
       enable32Bit = true;
+      extraPackages = with pkgs; [
+        nvidia-vaapi-driver
+      ];
     };
 
     nvidia = {
@@ -355,25 +358,12 @@ in
     bruno
 
     # --- Browsers ---
-    (pkgs.brave.overrideAttrs (old: {
-      postFixup = (old.postFixup or "") + ''
-        wrapProgram $out/bin/brave --add-flags "--disable-gpu"
-      '';
-    }))
+    pkgs.brave
     floorp-bin
 
     # --- Communication ---
-    # --disable-gpu works around blank window on NVIDIA + Wayland
-    (pkgs.vesktop.overrideAttrs (old: {
-      postFixup = (old.postFixup or "") + ''
-        wrapProgram $out/bin/vesktop --add-flags "--disable-gpu"
-      '';
-    }))
-    (pkgs.element-desktop.overrideAttrs (old: {
-      postFixup = (old.postFixup or "") + ''
-        wrapProgram $out/bin/element-desktop --add-flags "--disable-gpu"
-      '';
-    }))
+    pkgs.vesktop
+    pkgs.element-desktop
 
     # --- Media ---
     euphonica
@@ -533,6 +523,8 @@ in
     GBM_BACKEND = "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     LIBVA_DRIVER_NAME = "nvidia";
+    MOZ_DISABLE_RDD_SANDBOX = "1";
+    NVD_BACKEND = "direct";
 
     # Editor
     EDITOR = "nvim";
