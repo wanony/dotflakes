@@ -217,7 +217,7 @@ in
   networking.firewall = {
     checkReversePath = false; # for vpn
     enable = true;
-    allowedTCPPorts = [ 22 80 443 8096 8920 21115 21116 21117 21118 21119 ];
+    allowedTCPPorts = [ 22 80 443 8096 8920 21115 21116 21117 21118 21119 54321 ];
     allowedUDPPorts = [ 21116 ];
     # For development servers
     allowedTCPPortRanges = [
@@ -355,7 +355,11 @@ in
     bruno
 
     # --- Browsers ---
-    brave
+    (pkgs.brave.overrideAttrs (old: {
+      postFixup = (old.postFixup or "") + ''
+        wrapProgram $out/bin/brave --add-flags "--disable-gpu"
+      '';
+    }))
     floorp-bin
 
     # --- Communication ---
@@ -363,6 +367,11 @@ in
     (pkgs.vesktop.overrideAttrs (old: {
       postFixup = (old.postFixup or "") + ''
         wrapProgram $out/bin/vesktop --add-flags "--disable-gpu"
+      '';
+    }))
+    (pkgs.element-desktop.overrideAttrs (old: {
+      postFixup = (old.postFixup or "") + ''
+        wrapProgram $out/bin/element-desktop --add-flags "--disable-gpu"
       '';
     }))
 
@@ -434,6 +443,8 @@ in
       viAlias = true;
       vimAlias = true;
     };
+
+    nix-ld.enable = true;
 
     zsh.enable = true;
     fish.enable = true;
