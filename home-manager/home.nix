@@ -88,7 +88,7 @@
 
     sessionVariables = {
       TERMINAL = "konsole";
-      BROWSER = "floorp";
+      BROWSER = "firefox";
     };
   };
 

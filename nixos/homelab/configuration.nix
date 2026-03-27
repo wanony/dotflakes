@@ -254,7 +254,7 @@ in
     lazydocker
 
     # --- Browser ---
-    floorp-bin
+    firefox
 
     # --- Media ---
     mpv
@@ -376,7 +376,7 @@ in
   environment.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
-    BROWSER = "floorp";
+    BROWSER = "firefox";
     XDG_CURRENT_DESKTOP = "xfce";
   };
 

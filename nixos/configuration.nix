@@ -359,7 +359,7 @@ in
 
     # --- Browsers ---
     pkgs.brave
-    floorp-bin
+    firefox
 
     # --- Communication ---
     pkgs.vesktop
